@@ -57,7 +57,17 @@ public class SwiftFlutterFacebookAppLinksPlugin: NSObject, FlutterPlugin {
             result(nil)
             return
         case "getDeepLinkUrl":    
-            result(deepLinkUrl)
+              AppLinkUtility.fetchDeferredAppLink{ (url, error) in
+                if let error = error{
+                    print("Error %a", error)
+                }
+                if let url = url {
+                    self.deepLinkUrl = url.absoluteString
+
+                    // self.sendMessageToStream(link: self.deepLinkUrl)
+                }
+                result(self.deepLinkUrl)
+            }
         case "activateApp":
             AppEvents.shared.activateApp()
             result(true)
